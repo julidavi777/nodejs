@@ -1,0 +1,5 @@
+.config.env
+.eslintrc.json
+.pretierrc 
+.package-lock.json
+/node_modules/
