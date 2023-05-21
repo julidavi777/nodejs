@@ -20,8 +20,10 @@ exports.createTour = async (req, res) => {
 
 exports.getAllTours = async (req, res) => {
   try{
-
-    const tours = await Tour.find();
+    console.log(req.query)
+    // const tours = await Tour.find();
+    //FIRST WAY OF FILTERING 
+     const tours = await Tour.find();
     res.status(200).json({
       status: 'success',
       results: tours.length,
@@ -40,6 +42,7 @@ exports.getAllTours = async (req, res) => {
 exports.getTour = async (req, res) => {
   try{
    const tour =  await Tour.findById(req.params.id)
+   console.log(req.body.maxGroupSize)
     res.status(200).json(
       {
         status: "success",

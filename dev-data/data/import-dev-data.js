@@ -1,7 +1,7 @@
-const fs = require("fs")
+const fs = require('fs');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv'); 
-const Tour = require('./../../models/tourModel')
+const dotenv = require('dotenv');
+const Tour = require('./../../models/tourModel');
 dotenv.config({ path: './config.env' });
 
 const DB = process.env.DATABASE.replace(
@@ -11,45 +11,47 @@ const DB = process.env.DATABASE.replace(
 
 mongoose
   .connect(DB, {
-    useNewUrlParser: true,
+    useNewUrlParser: true
   })
   .then(() => {
     console.log('DB connection successful!');
   });
 
-  //READ JSON FILE 
-  const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')); 
-  console.log('all of this are the tours ',tours,' end')
+//READ JSON FILE
+const tours = JSON.parse(
+  fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')
+);
 
-//IMPORT DATA INTO DB 
-const importData = async ()=>{
-    try{
-        await Tour.create(tours); 
-        console.log('Data successfully loaded!')
-        process.exit(); 
+//IMPORT DATA INTO DB
 
-    }catch(err){
-        console.log(err)
-    }
+const importData = async () => {
+  try {
+    await Tour.create(tours);
+
+    console.log('Data successfully loaded!');
+  } catch (err) {
+    console.log(err);
+  }
+  process.exit();
+};
+
+//DELETE ALL DATA FROM DB
+
+const deleteData = async () => {
+  try {
+    await Tour.deleteMany();
+    console.log('Data successfully deleted!');
+  } catch (err) {
+    console.log(err);
+  }
+  process.exit();
+};
+
+if (process.argv[2] == '--import') {
+  importData();
+} else if (process.argv[2] === '--delete') {
+  deleteData();
 }
-
-//DELETE ALL DATA FROM DB 
-
-const deleteData = async ()=>{
-    try{
-        await Tour.deleteMany(); 
-        console.log('Data successfully deleted!')
-        process.exit(); 
-    }catch(err){
-        console.log(err); 
-    }
-}
-
-if(process.argv[2] == '--import'){
-  importData()
-}else if (process.argv[2] === '--delete'){
-  deleteData(); 
-}
-// COMMAND LINE TO IMPORT DATA 
+// COMMAND LINE TO IMPORT DATA
 //node dev-data/data/import-dev-data.js --import
 // console.log(process.argv)
