@@ -3,6 +3,7 @@ const Tour = require('./../models/tourModel');
 
 exports.createTour = async (req, res) => {
   try {
+    //BUILD QUERY 
     const newTour = await Tour.create(req.body);
     res.status(201).json({
       status: 'sucess',
@@ -20,10 +21,16 @@ exports.createTour = async (req, res) => {
 
 exports.getAllTours = async (req, res) => {
   try{
-    console.log(req.query)
-    // const tours = await Tour.find();
-    //FIRST WAY OF FILTERING 
-     const tours = await Tour.find();
+    //BUILD QUERY 
+    const queryObj = {...req.query}; 
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    excludedFields.forEach(el=> delete queryObj[el]) 
+
+    const query =  Tour.find(queryObj);
+    //EXECUTE QUERY 
+    const tour = await query; 
+
+    //SEND RESPONSE 
     res.status(200).json({
       status: 'success',
       results: tours.length,
@@ -36,6 +43,16 @@ exports.getAllTours = async (req, res) => {
       status: "fail",
       message: err, 
     }); 
+        //FIRST WAY OF FILTERING 
+    //  const tours = await Tour.find({price: 227});
+    //SECOND WAY TO FILTERING 
+    
+/*  const tours = await Tour.find();
+    .where('duration')
+    .equals(5)
+    .where('diffuculty)
+    .equal('easy'); 
+*/
   }
   };
 
