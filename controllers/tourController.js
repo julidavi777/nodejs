@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Tour = require('./../models/tourModel');
+const { match } = require('assert');
 
 exports.createTour = async (req, res) => {
   try {
@@ -22,13 +23,19 @@ exports.createTour = async (req, res) => {
 exports.getAllTours = async (req, res) => {
   try{
     //BUILD QUERY 
+    //1. FILTERING
+
     const queryObj = {...req.query}; 
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach(el=> delete queryObj[el]) 
 
-    const query =  Tour.find(queryObj);
+    //2. ADVANCED FILTERING 
+    let queryStr = JSON.stringify(queryObj)
+    //regular expression
+    queryStr =queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}` );
+    const query =  Tour.find(JSON.parse(queryStr));
     //EXECUTE QUERY 
-    const tour = await query; 
+    const tours = await query; 
 
     //SEND RESPONSE 
     res.status(200).json({
@@ -45,7 +52,7 @@ exports.getAllTours = async (req, res) => {
     }); 
         //FIRST WAY OF FILTERING 
     //  const tours = await Tour.find({price: 227});
-    //SECOND WAY TO FILTERING 
+    //SECOND WAY OF FILTERING 
     
 /*  const tours = await Tour.find();
     .where('duration')
