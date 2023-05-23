@@ -20,6 +20,7 @@ exports.createTour = async (req, res) => {
       }
     });
   } catch (err) {
+    console.log(err)
     res.status(404).json({
       status: 'fail',
       message: err
