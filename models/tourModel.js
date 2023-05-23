@@ -56,14 +56,17 @@ const tourSchema = new mongoose.Schema({
     select: false
   },
   startDates: [Date]
+},
+{
+toJSON: {virtuals : true},
+toObject: {virtuals : true}
 });
 
-  tourSchema.pre('save', function(next) {
-    console.log(tour)
-    next();
-  });
+tourSchema.virtual('durationWeeks').get(function(){
+  return this.duration / 7; 
+}); 
+const Tour = mongoose.model('Tour', tourSchema);
 
-  const Tour = mongoose.model('Tour', tourSchema);
 
 module.exports = Tour;
 
