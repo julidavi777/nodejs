@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-// const User = require('./userModel')
+const User = require('./userModel')
+const Review = require('./reviewModel')
 // const validator = require('validator');
 
 const tourSchema = new mongoose.Schema(
@@ -104,11 +105,12 @@ const tourSchema = new mongoose.Schema(
       }
     ],
     guides: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'User'
-    }
-    ]
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+      }
+    ],
+  
   },
   {
     toJSON: { virtuals: true },
@@ -119,6 +121,20 @@ const tourSchema = new mongoose.Schema(
 tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;
 });
+
+
+// Virtual populate 
+tourSchema.virtual('reviews', {
+  ref: 'Review', 
+  foreignField: 'tour',
+  localField: '_id'
+})
+// tourSchema.virtual('reviews', {
+//   ref: 'Review',
+//   foreignField: 'tour',
+//   localField: '_id',
+//   justOne: false
+// })
 
 // DOCUMENT MIDDLEWARE: runs before .save() and .create()
 tourSchema.pre('save', function(next) {
@@ -149,18 +165,17 @@ tourSchema.pre(/^find/, function(next) {
   next();
 });
 
-tourSchema.pre(/^find/, function(next){
+tourSchema.pre(/^find/, function(next) {
   this.populate({
-    path: 'guides', 
+    path: 'guides',
     select: '-__v -passwordChangedAt'
   });
-  next(); 
-})
+  next();
+});
 tourSchema.post(/^find/, function(docs, next) {
   console.log(`Query took ${Date.now() - this.start} milliseconds!`);
   next();
 });
-
 
 // AGGREGATION MIDDLEWARE
 tourSchema.pre('aggregate', function(next) {
