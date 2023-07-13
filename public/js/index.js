@@ -21,5 +21,3 @@ if(loginForm){
     })
 }
  
-
-console.log('hola')

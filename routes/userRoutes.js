@@ -1,11 +1,13 @@
 const express = require('express');
 const userController = require('./../controllers/userController');
 const authController = require('./../controllers/authController');
+const { render } = require('pug');
 
 const router = express.Router();
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
+router.get('/login', (req, res)=>{res.send('¡Hola Mundo!')} );
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 
