@@ -13,9 +13,7 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes')
-
 const app = express();
-
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 // 1) GLOBAL MIDDLEWARES
